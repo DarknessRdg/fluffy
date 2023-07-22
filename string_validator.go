@@ -1,8 +1,8 @@
-package fluffy_validator
+package fluffy
 
 import (
 	"fmt"
-	"github.com/DarknessRdg/fluffy-validator/internal/utils/maps"
+	"github.com/DarknessRdg/fluffy/internal/utils/maps"
 	"strings"
 )
 

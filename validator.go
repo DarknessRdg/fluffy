@@ -1,4 +1,4 @@
-package fluffy_validator
+package fluffy
 
 type IRule[T any] func(value T) (bool, ValidationError[T])
 

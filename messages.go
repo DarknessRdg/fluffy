@@ -1,4 +1,4 @@
-package fluffy_validator
+package fluffy
 
 // messageFields are the fields available to provide a custom error message formatted with the validations constraints.
 // For instance, to add the value validated to the error message.

@@ -1,4 +1,4 @@
-module github.com/DarknessRdg/fluffy-validator
+module github.com/DarknessRdg/fluffy
 
 go 1.20
 
