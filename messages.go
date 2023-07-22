@@ -15,4 +15,7 @@ const (
 	ExpectedLen = messageFields("ExpectedLen")
 	// ExpectedToContain is the value the was expected to contain. It's only available in `contains` validations.
 	ExpectedToContain = messageFields("ExpectedToContain")
+	// NotExpectedToContain is the value that was not expect to be present.
+	// It's only available in `NotContains` validations
+	NotExpectedToContain = messageFields("NotExpectedToContain")
 )

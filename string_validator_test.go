@@ -226,3 +226,62 @@ func TestStringValidator_Containsf(t *testing.T) {
 		})
 	}
 }
+
+func TestStringValidator_NotContainsf(t *testing.T) {
+	tests := []struct {
+		name            string
+		notContains     string
+		format          string
+		value           string
+		valid           bool
+		fields          []messageFields
+		expectedMessage string
+	}{
+		{
+			name:        "When value does not contains the expected substring, Then don't return error",
+			notContains: "is not a substring",
+			value:       "message with value",
+			valid:       true,
+		},
+		{
+			name:            "When value contain a forbidden substring, Then return error",
+			notContains:     "forbidden",
+			value:           "This message should not contain the forbidden word",
+			format:          "Error message",
+			expectedMessage: "Error message",
+			valid:           false,
+		},
+		{
+			name:            "Substring is always present in any string, Then return error",
+			notContains:     "",
+			value:           "Any string",
+			valid:           false,
+			format:          "Error message",
+			expectedMessage: "Error message",
+		},
+		{
+			name:            "When contains, Then return error message formatted with all fields values available",
+			notContains:     "forbidden",
+			value:           "invalid string with forbidden word",
+			valid:           false,
+			format:          "Type = %s , NotExpectedToContain = %s , Value = %s",
+			expectedMessage: "Type = string , NotExpectedToContain = forbidden , Value = invalid string with forbidden word",
+			fields:          []messageFields{Type, NotExpectedToContain, Value},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			validator := NewStringValidator().NotContainsf(tt.notContains, tt.format, tt.fields...)
+
+			valid, err := validator.Validate(tt.value)
+
+			assert.Equal(t, tt.valid, valid)
+
+			if !valid {
+				assert.Equal(t, tt.expectedMessage, err.message)
+				assert.Equal(t, tt.value, err.value)
+			}
+		})
+	}
+}

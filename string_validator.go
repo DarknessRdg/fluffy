@@ -60,6 +60,23 @@ func (v *StringValidator) Containsf(contains string, format string, fields ...me
 	return v.addRule(isValid, format, config, fields...)
 }
 
+// NotContainsf validated given string contains a required substring.
+// It's the same as `strings.Contains(value, substring)`
+// Message fields options are:
+//   - Type
+//   - Value
+//   - NotExpectedToContain
+func (v *StringValidator) NotContainsf(notContains string, format string, fields ...messageFields) *StringValidator {
+	config := v.getDefaultStringMessagesConfig()
+	config[NotExpectedToContain] = notContains
+
+	isValid := func(value string) bool {
+		return !strings.Contains(value, notContains)
+	}
+
+	return v.addRule(isValid, format, config, fields...)
+}
+
 func (v *StringValidator) getDefaultStringMessagesConfig() map[messageFields]any {
 	return map[messageFields]any{
 		Type: "string",
