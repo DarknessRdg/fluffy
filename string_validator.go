@@ -1,6 +1,9 @@
 package fluffy_validator
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/DarknessRdg/fluffy-validator/internal/utils/maps"
+)
 
 type stringMessageFields string
 
@@ -52,16 +55,7 @@ func (v *StringValidator) getDefaultStringMessagesConfig() map[stringMessageFiel
 }
 
 func (v *StringValidator) buildFieldsValues(config map[stringMessageFields]any, fields ...stringMessageFields) []any {
-	values := make([]any, 0, len(fields))
-
-	for _, field := range fields {
-		value, ok := config[field]
-
-		if ok {
-			values = append(values, value)
-		}
-	}
-	return values
+	return maps.FilterValuesInKeys(config, fields...)
 }
 
 func (v *StringValidator) addRule(
