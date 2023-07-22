@@ -1,4 +1,4 @@
-package fluffy_validator
+package fluffy
 
 import (
 	"github.com/stretchr/testify/assert"
