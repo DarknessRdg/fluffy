@@ -6,7 +6,7 @@ type Validator[T any] struct {
 	rules []IRule[T]
 }
 
-func NewValidator[T any]() *Validator[T] {
+func New[T any]() *Validator[T] {
 	return &Validator[T]{
 		rules: make([]IRule[T], 0),
 	}

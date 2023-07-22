@@ -17,7 +17,7 @@ type StringValidator struct {
 
 func NewStringValidator() *StringValidator {
 	return &StringValidator{
-		Validator: NewValidator[string](),
+		Validator: New[string](),
 	}
 }
 
