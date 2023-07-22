@@ -5,15 +5,6 @@ import (
 	"github.com/DarknessRdg/fluffy-validator/internal/utils/maps"
 )
 
-type stringMessageFields string
-
-const (
-	Type        = stringMessageFields("type")
-	Value       = "Value"
-	ValueLen    = "ValueLne"
-	ExpectedLen = "ExpectedLne"
-)
-
 type StringValidator struct {
 	*Validator[string]
 }
@@ -34,7 +25,12 @@ func (v *StringValidator) Len(exactLen int) *StringValidator {
 }
 
 // Lenf is the same as `len` validator, with addition of custom message when it fails.
-func (v *StringValidator) Lenf(exactLen int, format string, fields ...stringMessageFields) *StringValidator {
+// Message fields options are:
+//	- Type
+//  - Value
+// 	- ValueLen
+//	- ExpectedLen
+func (v *StringValidator) Lenf(exactLen int, format string, fields ...messageFields) *StringValidator {
 	config := v.getDefaultStringMessagesConfig()
 	config[ExpectedLen] = exactLen
 
@@ -47,22 +43,22 @@ func (v *StringValidator) Lenf(exactLen int, format string, fields ...stringMess
 	return v
 }
 
-func (v *StringValidator) getDefaultStringMessagesConfig() map[stringMessageFields]any {
-	config := make(map[stringMessageFields]any)
+func (v *StringValidator) getDefaultStringMessagesConfig() map[messageFields]any {
+	config := make(map[messageFields]any)
 
 	config[Type] = "string"
 	return config
 }
 
-func (v *StringValidator) buildFieldsValues(config map[stringMessageFields]any, fields ...stringMessageFields) []any {
+func (v *StringValidator) buildFieldsValues(config map[messageFields]any, fields ...messageFields) []any {
 	return maps.FilterValuesInKeys(config, fields...)
 }
 
 func (v *StringValidator) addRule(
 	isValid func(string) bool,
 	format string,
-	config map[stringMessageFields]any,
-	fields ...stringMessageFields,
+	config map[messageFields]any,
+	fields ...messageFields,
 ) {
 	v.Validator.AddRule(func(value string) (bool, ValidationError[string]) {
 		config[Value] = value

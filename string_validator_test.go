@@ -59,7 +59,7 @@ func TestStringValidator_Lenf(t *testing.T) {
 		valid           bool
 		format          string
 		expectedMessage string
-		formatFields    []stringMessageFields
+		formatFields    []messageFields
 	}{
 		{
 			name:     "When value len is lower, Then return error",
@@ -93,7 +93,7 @@ func TestStringValidator_Lenf(t *testing.T) {
 			value:           "",
 			format:          "Type = %s ; ValueLen = %d ; ExpectedLen = %d",
 			expectedMessage: "Type = string ; ValueLen = 0 ; ExpectedLen = 3",
-			formatFields:    []stringMessageFields{Type, ValueLen, ExpectedLen},
+			formatFields:    []messageFields{Type, ValueLen, ExpectedLen},
 			valid:           false,
 		},
 	}
@@ -116,7 +116,7 @@ func TestStringValidator_Lenf(t *testing.T) {
 }
 
 func TestStringValidator_buildFieldsValues(t *testing.T) {
-	allFieldsConfig := map[stringMessageFields]any{
+	allFieldsConfig := map[messageFields]any{
 		ExpectedLen: 3,
 		Type:        "type",
 		ValueLen:    1,
@@ -124,38 +124,38 @@ func TestStringValidator_buildFieldsValues(t *testing.T) {
 
 	tests := []struct {
 		name     string
-		config   map[stringMessageFields]any
-		fields   []stringMessageFields
+		config   map[messageFields]any
+		fields   []messageFields
 		expected []any
 	}{
 		{
 			name:     "When empty field, Then return empty values",
 			config:   allFieldsConfig,
-			fields:   []stringMessageFields{},
+			fields:   []messageFields{},
 			expected: []any{},
 		},
 		{
 			name:     "When only add Expected, Then return expected len",
 			config:   allFieldsConfig,
-			fields:   []stringMessageFields{ExpectedLen},
+			fields:   []messageFields{ExpectedLen},
 			expected: []any{3},
 		},
 		{
 			name:     "When only add Type, Then return type",
 			config:   allFieldsConfig,
-			fields:   []stringMessageFields{ExpectedLen},
+			fields:   []messageFields{ExpectedLen},
 			expected: []any{3},
 		},
 		{
 			name:     "When only add ValueLen, Then return value len",
 			config:   allFieldsConfig,
-			fields:   []stringMessageFields{ValueLen},
+			fields:   []messageFields{ValueLen},
 			expected: []any{1},
 		},
 		{
 			name:     "When add all fields, Then return all fields respecting the fields order",
 			config:   allFieldsConfig,
-			fields:   []stringMessageFields{Type, ValueLen, ExpectedLen},
+			fields:   []messageFields{Type, ValueLen, ExpectedLen},
 			expected: []any{"type", 1, 3},
 		},
 	}
