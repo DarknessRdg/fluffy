@@ -7,7 +7,7 @@ import (
 
 func TestMessageFieldsAreUnique(t *testing.T) {
 	allMessageFields := []messageFields{
-		Type, Value, ValueLen, ExpectedLen,
+		Type, Value, ValueLen, ExpectedLen, ExpectedToContain,
 	}
 
 	set := make(map[messageFields]bool)

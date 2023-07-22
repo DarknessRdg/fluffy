@@ -13,4 +13,6 @@ const (
 	ValueLen = messageFields("ValueLen")
 	// ExpectedLen is the len constraint expected but was not equals to value len. It's only present in len validations.
 	ExpectedLen = messageFields("ExpectedLen")
+	// ExpectedToContain is the value the was expected to contain. It's only available in `contains` validations.
+	ExpectedToContain = messageFields("ExpectedToContain")
 )

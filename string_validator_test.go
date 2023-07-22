@@ -169,3 +169,60 @@ func TestStringValidator_buildFieldsValues(t *testing.T) {
 		})
 	}
 }
+
+func TestStringValidator_Containsf(t *testing.T) {
+	tests := []struct {
+		name            string
+		contains        string
+		format          string
+		value           string
+		valid           bool
+		fields          []messageFields
+		expectedMessage string
+	}{
+		{
+			name:     "When value contains the expected substring, Then don't return error",
+			contains: "with",
+			value:    "message with value",
+			valid:    true,
+		},
+		{
+			name:            "When value does not contain expected substring, Then return error",
+			contains:        "not contains this",
+			value:           "invalid message",
+			format:          "Error message",
+			expectedMessage: "Error message",
+			valid:           false,
+		},
+		{
+			name:     "Substring is always present in any string, Then don't return error",
+			contains: "",
+			value:    "Any string",
+			valid:    true,
+		},
+		{
+			name:            "When does not contains, Then return error message formatted with all fields values available",
+			contains:        "Does not contain",
+			value:           "invalid string",
+			valid:           false,
+			format:          "Type = %s , ExpectedToContains = %s , Value = %s",
+			expectedMessage: "Type = string , ExpectedToContains = Does not contain , Value = invalid string",
+			fields:          []messageFields{Type, ExpectedToContain, Value},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			validator := NewStringValidator().Containsf(tt.contains, tt.format, tt.fields...)
+
+			valid, err := validator.Validate(tt.value)
+
+			assert.Equal(t, tt.valid, valid)
+
+			if !valid {
+				assert.Equal(t, tt.expectedMessage, err.message)
+				assert.Equal(t, tt.value, err.value)
+			}
+		})
+	}
+}

@@ -3,6 +3,7 @@ package fluffy_validator
 import (
 	"fmt"
 	"github.com/DarknessRdg/fluffy-validator/internal/utils/maps"
+	"strings"
 )
 
 type StringValidator struct {
@@ -41,6 +42,24 @@ func (v *StringValidator) Lenf(exactLen int, format string, fields ...messageFie
 
 	v.addRule(isValid, format, config, fields...)
 
+	return v
+}
+
+// Containsf validated given string contains a required substring.
+// It's the same as `strings.Contains(value, substring)`
+// Message fields options are:
+//   - Type
+//   - Value
+//   - ExpectedToContain
+func (v *StringValidator) Containsf(contains string, format string, fields ...messageFields) *StringValidator {
+	config := v.getDefaultStringMessagesConfig()
+	config[ExpectedToContain] = contains
+
+	isValid := func(value string) bool {
+		return strings.Contains(value, contains)
+	}
+
+	v.addRule(isValid, format, config, fields...)
 	return v
 }
 
