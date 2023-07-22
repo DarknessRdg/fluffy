@@ -43,6 +43,24 @@ func (v *StringValidator) Lenf(exactLen int, format string, fields ...messageFie
 	return v.addRule(isValid, format, config, fields...)
 }
 
+// MinLenf ensure string len is greater or equals a len. It's the same as `len(value) >= min`
+// Message fields options are:
+//   - Type
+//   - Value
+//   - ValueLen
+//   - ExpectedLen
+func (v *StringValidator) MinLenf(minLen int, format string, fields ...messageFields) *StringValidator {
+	config := v.getDefaultStringMessagesConfig()
+	config[ExpectedLen] = minLen
+
+	isValid := func(value string) bool {
+		config[ValueLen] = len(value)
+		return len(value) >= minLen
+	}
+
+	return v.addRule(isValid, format, config, fields...)
+}
+
 // Containsf validated given string contains a required substring.
 // It's the same as `strings.Contains(value, substring)`
 // Message fields options are:

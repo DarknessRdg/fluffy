@@ -115,6 +115,70 @@ func TestStringValidator_Lenf(t *testing.T) {
 	}
 }
 
+func TestStringValidator_MinLenf(t *testing.T) {
+	tests := []struct {
+		name            string
+		minLen          int
+		value           string
+		valid           bool
+		format          string
+		expectedMessage string
+		formatFields    []messageFields
+	}{
+		{
+			name:   "When value len is equal to min, Then don't return error",
+			minLen: 3,
+			value:  "123",
+			valid:  true,
+		},
+		{
+			name:   "When value len is greater than min len, Then don't return error",
+			minLen: 3,
+			value:  "1234",
+			valid:  true,
+		},
+		{
+			name:            "When give custom message without any param, Then error message shouldn't change",
+			minLen:          3,
+			value:           "",
+			valid:           false,
+			format:          "Message without any extra param.",
+			expectedMessage: "Message without any extra param.",
+		},
+		{
+			name:   "When value len is lower than min len, Then return error",
+			minLen: 3,
+			value:  "12",
+			valid:  false,
+		},
+		{
+			name:            "When invalid value, Then format message with all available message fields",
+			minLen:          3,
+			value:           "12",
+			format:          "Type = %s ; Value = %s ; ValueLen = %d ; ExpectedLen = %d",
+			expectedMessage: "Type = string ; Value = 12 ; ValueLen = 2 ; ExpectedLen = 3",
+			formatFields:    []messageFields{Type, Value, ValueLen, ExpectedLen},
+			valid:           false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			v := NewStringValidator().
+				MinLenf(tt.minLen, tt.format, tt.formatFields...)
+
+			valid, err := v.Validate(tt.value)
+
+			assert.Equal(t, tt.valid, valid)
+
+			if !tt.valid {
+				assert.Equal(t, tt.expectedMessage, err.message)
+				assert.Equal(t, tt.value, err.value)
+			}
+		})
+	}
+}
+
 func TestStringValidator_buildFieldsValues(t *testing.T) {
 	allFieldsConfig := map[messageFields]any{
 		ExpectedLen: 3,
