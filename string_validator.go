@@ -26,15 +26,16 @@ func (v *StringValidator) Len(exactLen int) *StringValidator {
 
 // Lenf is the same as `len` validator, with addition of custom message when it fails.
 // Message fields options are:
-//	- Type
-//  - Value
-// 	- ValueLen
-//	- ExpectedLen
+//   - Type
+//   - Value
+//   - ValueLen
+//   - ExpectedLen
 func (v *StringValidator) Lenf(exactLen int, format string, fields ...messageFields) *StringValidator {
 	config := v.getDefaultStringMessagesConfig()
 	config[ExpectedLen] = exactLen
 
 	isValid := func(value string) bool {
+		config[ValueLen] = len(value)
 		return len(value) == exactLen
 	}
 
@@ -44,10 +45,9 @@ func (v *StringValidator) Lenf(exactLen int, format string, fields ...messageFie
 }
 
 func (v *StringValidator) getDefaultStringMessagesConfig() map[messageFields]any {
-	config := make(map[messageFields]any)
-
-	config[Type] = "string"
-	return config
+	return map[messageFields]any{
+		Type: "string",
+	}
 }
 
 func (v *StringValidator) buildFieldsValues(config map[messageFields]any, fields ...messageFields) []any {
@@ -62,7 +62,6 @@ func (v *StringValidator) addRule(
 ) {
 	v.Validator.AddRule(func(value string) (bool, ValidationError[string]) {
 		config[Value] = value
-		config[ValueLen] = len(value)
 
 		err := ValidationError[string]{}
 
