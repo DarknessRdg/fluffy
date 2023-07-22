@@ -40,9 +40,7 @@ func (v *StringValidator) Lenf(exactLen int, format string, fields ...messageFie
 		return len(value) == exactLen
 	}
 
-	v.addRule(isValid, format, config, fields...)
-
-	return v
+	return v.addRule(isValid, format, config, fields...)
 }
 
 // Containsf validated given string contains a required substring.
@@ -59,8 +57,7 @@ func (v *StringValidator) Containsf(contains string, format string, fields ...me
 		return strings.Contains(value, contains)
 	}
 
-	v.addRule(isValid, format, config, fields...)
-	return v
+	return v.addRule(isValid, format, config, fields...)
 }
 
 func (v *StringValidator) getDefaultStringMessagesConfig() map[messageFields]any {
@@ -78,7 +75,7 @@ func (v *StringValidator) addRule(
 	format string,
 	config map[messageFields]any,
 	fields ...messageFields,
-) {
+) *StringValidator {
 	v.Validator.AddRule(func(value string) (bool, ValidationError[string]) {
 		config[Value] = value
 
@@ -97,4 +94,6 @@ func (v *StringValidator) addRule(
 
 		return valid, err
 	})
+
+	return v
 }
